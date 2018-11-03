@@ -7,7 +7,7 @@ main.o: main.cpp unorderedArrayListType.h
 	g++ -Wall -c main.cpp
 
 unorderedArrayListTypeImp.o: unorderedArrayListTypeImp.cpp unorderedArrayListType.h arrayListType.h
-	g++ -Wall -c unorderedArrayListTypeImp.cpp
+	g++ -Wall -o unorderedArrayListTypeImp.o unorderedArrayListTypeImp.cpp
 
 clean:
 	rm *.bin *.o
