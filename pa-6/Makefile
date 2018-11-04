@@ -11,11 +11,11 @@ pa-6.bin: main.o
 main.o: main.cpp queueADT.h queueAsArray.h
 	g++ -Wall -c -g main.cpp
 
-pa-6-imp.bin: main.o unorderedLinkedListImp.o
-	g++ -o pa-6.bin main.o
+pa-6-imp.bin: main.o queueAsArrayImp.o
+	g++ -o pa-6-imp.bin main.o queueAsArrayImp.o
 
-unorderedLinkedListImp.o: unorderedLinkedListImp.cpp linkedList.h unorderedLinkedList.h
-	g++ -Wall -c -g unorderedLinkedListImp.cpp
+queueAsArrayImp.o: queueAsArrayImp.cpp queueAsArray.h queueADT.h
+	g++ -Wall -c -g queueAsArrayImp.cpp
 
 clean:
 	rm *.bin *.o ._*
