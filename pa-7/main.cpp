@@ -48,7 +48,7 @@ void runProgram() {
         std::cout << std::endl << "Welcome to " << hw_no << std::endl;
         msg = "Before we get started, I'd like to know if you would "
                 "like to print\na subset of the array in question "
-                "before each step? [y/N]";
+                "before each step? [y/n]";
         if (checkInputBool(msg, 'y', 'n')) {
             msg = "How many array items would you like to see printed?";
             subCnt = checkInputInt(msg);
@@ -71,32 +71,37 @@ void runProgram() {
     }
 }
 
-// main
-int main() {
-    struct timeval t1;
-    gettimeofday(&t1, NULL);
-    srand(t1.tv_usec * t1.tv_sec * getpid());
-
-    runProgram();
-    return 0;
-}
-
 // theSearchingPart
 void theSearchingPart(int sc, bool pFirst) {
     std::string msg = "";
     int whatToLookFor = 0;
+    // Defining these here so you know exactly what I'm asking to be printed
+    bool printKeyComparisons = true;
+    bool printNumberOfSwaps = false;
+    bool printFirst = true;          // !printFirst will print the last elements
 
+    // Let's print both the first and last x number of elements for the user
+    if (sc > 0) {
+        std::cout << "---------------------------------------------------------"
+                    << "------------------------" << std::endl
+                    << "For your convenience, here is the first and last "
+                    << sc << " items of the array:" << std::endl;
+        copy1.print(sc, printFirst);
+        copy1.print(sc, !printFirst);
+        std::cout << "---------------------------------------------------------"
+                    << "-----------------------" << std::endl;
+    }
     while (1) {
-        if (sc > 0) { copy1.print(sc, true); copy1.print(sc, false); }
         msg = "What would you like me to look for? (\"0\" exits the program)";
         whatToLookFor = checkInputInt(msg);
         std::cout << std::endl;
         if (whatToLookFor == 0) { break; }
         if (copy1.doBinary(whatToLookFor) != -1) {
             std::cout << whatToLookFor << " was found." << std::endl;
-            copy1.printStats(true, false);
+            copy1.printStats(printKeyComparisons, printNumberOfSwaps);
         } else {
             std::cout << whatToLookFor << " was not found.  " << std::endl;
+            copy1.printStats(printKeyComparisons, printNumberOfSwaps);
         }
         std::cout << std::endl;
     }
@@ -107,8 +112,6 @@ void theSearchingPart(int sc, bool pFirst) {
 void theSortingPart(int sc, bool pFirst) {
     int loopCount = 0;
     std::string msg = "";
-    //int forceItem = 1111;
-    //bool force = true;
 
     msg = "How many times would you like to sort your lists?";
     loopCount = checkInputInt(msg);
@@ -120,9 +123,6 @@ void theSortingPart(int sc, bool pFirst) {
         originalList.populateRandomly();
         copy1 = originalList;
         copy2 = originalList;
-        //originalList.insertEnd(++forceItem, force);
-        //copy1.insertEnd(++forceItem, force);
-        //copy2.insertEnd(++forceItem, force);
         std::cout << "## LOOP #" << i
                     << "------------------------------------------------"
                     << "-----------------------" << std::endl;
@@ -163,7 +163,6 @@ int checkInputInt(std::string strMsg) {
 
 bool checkInputBool(std::string strMsg, char theTrueOne, char theFalseOne) {
     char c;
-
     while (true) {
         std::cout << strMsg << ": ";
         std::cin >> c;
@@ -188,4 +187,14 @@ bool checkInputBool(std::string strMsg, char theTrueOne, char theFalseOne) {
             }
         }
     }
+}
+
+// main
+int main() {
+    // initialize and seed random generator
+    struct timeval t1;
+    gettimeofday(&t1, NULL);
+    srand(t1.tv_usec * t1.tv_sec * getpid());
+    runProgram();
+    return 0;
 }
