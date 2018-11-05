@@ -52,9 +52,9 @@ void runProgram() {
         if (checkInputBool(msg, 'y', 'n')) {
             msg = "How many array items would you like to see printed?";
             subCnt = checkInputInt(msg);
-            msg = "Lastly, shall I print the first or the last "
+            msg = "Lastly, shall I print the [f]irst or the [l]ast "
                     +std::to_string(subCnt)+
-                    " items of the array? [F]irst/[L]ast";
+                    " items of the array?";
             printFirstElements = checkInputBool(msg, 'f', 'l');
         }
         std::cout << std::endl << "First, the sorting part..." << std::endl;
@@ -120,9 +120,9 @@ void theSortingPart(int sc, bool pFirst) {
         originalList.populateRandomly();
         copy1 = originalList;
         copy2 = originalList;
-        originalList.insertEnd(++forceItem, force);
-        copy1.insertEnd(++forceItem, force);
-        copy2.insertEnd(++forceItem, force);
+        //originalList.insertEnd(++forceItem, force);
+        //copy1.insertEnd(++forceItem, force);
+        //copy2.insertEnd(++forceItem, force);
         std::cout << "## LOOP #" << i
                     << "------------------------------------------------"
                     << "-----------------------" << std::endl;

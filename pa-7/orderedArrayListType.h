@@ -216,8 +216,8 @@ void orderedArrayListType<Type>::insertionSort() {
 
     // OOO = "OutOfOrder"
     for (int firstOOO = 1; firstOOO < this->length; firstOOO++) {
-        keyComparisons++;
         if (this->list[firstOOO] < this->list[firstOOO - 1]) {
+            keyComparisons++;
             Type temp = this->list[firstOOO];
             int loc = firstOOO;
 
