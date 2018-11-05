@@ -86,13 +86,13 @@ void theSearchingPart(int sc, bool pFirst) {
     std::string msg = "";
     int whatToLookFor = 0;
 
-    while(1) {
+    while (1) {
         if (sc > 0) { copy1.print(sc, true); copy1.print(sc, false); }
         msg = "What would you like me to look for? (\"0\" exits the program)";
         whatToLookFor = checkInputInt(msg);
         std::cout << std::endl;
         if (whatToLookFor == 0) { break; }
-        if (copy1.binSearch(whatToLookFor) != -1) {
+        if (copy1.doBinary(whatToLookFor) != -1) {
             std::cout << whatToLookFor << " was found." << std::endl;
             copy1.printStats(true, false);
         } else {
@@ -107,8 +107,8 @@ void theSearchingPart(int sc, bool pFirst) {
 void theSortingPart(int sc, bool pFirst) {
     int loopCount = 0;
     std::string msg = "";
-    int forceItem = 1111;
-    bool force = true;
+    //int forceItem = 1111;
+    //bool force = true;
 
     msg = "How many times would you like to sort your lists?";
     loopCount = checkInputInt(msg);

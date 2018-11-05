@@ -175,7 +175,7 @@ void arrayListType<Type>::print(int sc, bool pFirst) const {
             start = this->length - s;
             end = start + s;
         } else {
-            start = 1;
+            start = 0;
             end = s;
         }
         if (pFirst)
@@ -183,8 +183,8 @@ void arrayListType<Type>::print(int sc, bool pFirst) const {
         else
           std::cout << "[INFO] Last ";
         std::cout << s << " items in the current array: ";
-        for (int i = start; i <= end; i++)
-            std::cout << list[i-1] << " ";
+        for (int i = start; i <= end-1; i++)
+            std::cout << list[i] << " ";
         if (tooLarge)
             std::cout << std::endl << "(Requested item count of " << sc
                       << " is too large. Showing only "

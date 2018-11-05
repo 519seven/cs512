@@ -12,37 +12,50 @@
 #include <stdio.h>
 #include <sys/time.h>
 #include <time.h>
-#include <unistd.h>                                     // for getpid
+#include <unistd.h>                                                // for getpid
 
 #include "arrayListType.h"
 
 template <class Type>
 class orderedArrayListType: public arrayListType<Type> {
 public:
-    const orderedArrayListType<Type>& operator=(const orderedArrayListType<Type>&);
-    // Overload the assignment operator.
+    // Changing/Manipulating the arrary
+    void populateRandomly();
     void insertAt(int location, Type& insertItem);
     void insertEnd(Type& insertItem, const bool f);
     void replaceAt(int location, Type& repItem);
-    int seqSearch(Type& searchItem);
-    int binSearch(Type& searchItem);
     void remove(Type& removeItem);
-    void populateRandomly();
+
+    // Searching
+    int seqSearch(Type& searchItem);
+    int recursiveBinarySearch(int f, int l, Type& x);
+    int doBinary(Type& searchItem);
+
+    // Sorting
     int minLocation(int f, int e);
     void swap(int f, int s);
     void selectionSort ();
     void insertionSort ();
+
+    // Printing
     int printComps();
     int printSwaps();
     void printStats(bool c, bool s);
 
-    orderedArrayListType(int size = LISTITEMS);               // Constructor
+    // Overloading
+    const orderedArrayListType<Type>&
+        operator=(const orderedArrayListType<Type>&);
+        // Assignment operator
+
+    orderedArrayListType(int size = LISTITEMS);                   // Constructor
 
  protected:
     int keyComparisons;
     int numberOfSwaps;
 };
 
+// *****************************************************************************
+// Changing/Manipulating the array
 // begin populateRandomly
 template <class Type>
 void orderedArrayListType<Type>::populateRandomly() {
@@ -90,6 +103,16 @@ void orderedArrayListType<Type>::insertEnd(Type& insertItem, const bool force) {
     }
 } // end insertEnd
 
+// begin replaceAt
+template <class Type>
+void orderedArrayListType<Type>::replaceAt(int location, Type& repItem) {
+    if (location < 0 || location >= this->length)
+        std::cout << "The location of the item to be "
+             << "replaced is out of range." << std::endl;
+    else
+        this->list[location] = repItem;
+} // end replaceAt
+
 // begin remove
 template <class Type>
 void orderedArrayListType<Type>::remove(Type& removeItem) {
@@ -107,17 +130,6 @@ void orderedArrayListType<Type>::remove(Type& removeItem) {
                  << std::endl;
     }
 } // end remove
-
-// begin replaceAt
-template <class Type>
-void orderedArrayListType<Type>::replaceAt(int location, Type& repItem) {
-    if (location < 0 || location >= this->length)
-        std::cout << "The location of the item to be "
-             << "replaced is out of range." << std::endl;
-    else
-        this->list[location] = repItem;
-} // end replaceAt
-
 // *****************************************************************************
 // Searching algorithms
 // begin seqSearch
@@ -140,33 +152,37 @@ int orderedArrayListType<Type>::seqSearch(Type& searchItem) {
         return -1;
 } // end seqSearch
 
-// begin binSearch
+// begin recursiveBinSearch
 template <class Type>
-int orderedArrayListType<Type>::binSearch(Type& item) {
+int orderedArrayListType<Type>::recursiveBinarySearch(int f, int l, Type& x) {
+    this->keyComparisons++;
+    if (l-f >= 1) {
+        int mid = (f+l)/2;
+        //std::cout << "mid=" << mid
+        //            << "|first=" << f << "|last=" << l << std::endl;
+        // if x is present in the middle, return it
+        if (this->list[mid] == x)
+            return mid;
+        // if x is smaller than mid, it's in the left half, send it back through
+        if (this->list[mid] > x)
+            return recursiveBinarySearch(f, mid - 1, x);
+        // if x is larger than mid, it's in the right half, send it back through
+        if (this->list[mid] < x)
+            return recursiveBinarySearch(mid + 1, l, x);
+    } else if (l-f == 0)
+        if (this->list[f] == x)
+            return f;
+    // we've reached the end, nothing was found
+    return -1;
+}
+
+// begin doBinary
+template <class Type>
+int orderedArrayListType<Type>::doBinary(Type& item) {
     this->keyComparisons = 0;
     this->numberOfSwaps = 0;
-    int first = 0;
-    int last = this->length - 1;
-    int mid;
-
-    bool found = false;
-
-    while (first <= last && !found) {
-        this->keyComparisons++;
-        mid = (first + last) / 2;
-        if (this->list[mid] == item)
-            found = true;
-        else if (this->list[mid] > item)
-            last = mid - 1;
-        else
-            first = mid + 1;
-    }
-
-    if (found)
-        return mid;
-    return -1;
-}  // end binSearch
-
+    return recursiveBinarySearch(0, this->length, item);
+}  // end doBinary
 // *****************************************************************************
 // Sorting Algorithms
 // begin minLocation for Selection Sort
@@ -232,10 +248,7 @@ void orderedArrayListType<Type>::insertionSort() {
     }
 } // end insertionSort
 // *****************************************************************************
-
-// *****************************************************************************
 // Print Statistics
-
 // begin printComps
 template <class Type>
 int orderedArrayListType<Type>::printComps() {
@@ -259,10 +272,7 @@ void orderedArrayListType<Type>::printStats(bool comps, bool swaps) {
                     << std::endl << std::endl;
 } // end printStats
 // *****************************************************************************
-
-// *****************************************************************************
 // Overloading
-
 // = operator
 template <class Type>
 const orderedArrayListType<Type>& orderedArrayListType<Type>::operator=
