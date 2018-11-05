@@ -1,7 +1,6 @@
 #ifndef H_arrayListType
 #define H_arrayListType
 
-#define HWNUMBER "PA-7 - Sorting and Searching"
 #define LISTITEMS 1000
 
 template <class Type>
@@ -32,6 +31,18 @@ public:
       //Postcondition: Elements of the list are output on the
       //               standard output device.
 
+    void print(int s) const;
+      //Function to output the elements of the list.  If passed
+      //    an integer, it will print only that many items
+      //Postcondition: Elements of the list are output on the
+      //               standard output device.
+
+    void print(int s, bool first) const;
+      //Function to output the elements of the list.  If passed
+      //    an integer, it will print only that many items
+      //Postcondition: Elements of the list are output on the
+      //               standard output device.
+
     bool isItemAtEqual(int location, Type& item) const;
       //Function to determine whether item is the same as
       //the item in the list at the position specified
@@ -53,7 +64,7 @@ public:
       //               out of range, an appropriate message
       //               is displayed.
 
-    virtual void insertEnd(Type& insertItem) = 0;
+    virtual void insertEnd(Type& insertItem, const bool force) = 0;
       //Function to insert insertItem an item at the end of
       //the list. Note that this is an abstract function.
       //Postcondition: list[length] = insertItem; and length++;
@@ -88,7 +99,7 @@ public:
       //After this operation, the size of the list is zero.
       //Postcondition: length = 0;
 
-    virtual int seqSearch(Type& searchItem) const = 0;
+    virtual int seqSearch(Type& searchItem) = 0;
       //Function to search the list for searchItem.
       //Note that this is an abstract function.
       //Postcondition: If the item is found, returns the
@@ -123,5 +134,102 @@ protected:
                   //size of the list
 };
 
+// begin print
+template <class Type>
+void arrayListType<Type>::print() const {
+    if (this->length !=0) {
+        for (int i = 0; i < this->length; i++)
+            std::cout << list[i] << " ";
+        std::cout << std::endl;
+    } else {
+        std::cout << "<empty>" << std::endl;
+    }
+}  // end print
+
+// begin print
+template <class Type>
+void arrayListType<Type>::print(int s) const {
+    if (this->length !=0) {
+        if (s > this->length)
+            s = this->length;
+        for (int i = 1; i <= s; i++)
+            std::cout << list[i-1] << " ";
+        std::cout << std::endl;
+    } else {
+        std::cout << "<empty>" << std::endl;
+    }
+}  // end print
+
+// begin print
+template <class Type>
+void arrayListType<Type>::print(int sc, bool pFirst) const {
+    if (this->length !=0) {
+        int s, start, end = 0;
+        bool tooLarge = false;
+
+        // quick check to make sure the subset count isn't larger than the array
+        if (sc > this->length) { s = 5; tooLarge = true; } else { s = sc; }
+        // let's find out if we have to reverse it first
+        if (!pFirst) {
+            // print the last X items (in the same order, just the last ones)
+            start = this->length - s;
+            end = start + s;
+        } else {
+            start = 1;
+            end = s;
+        }
+        if (pFirst)
+          std::cout << "[INFO] First ";
+        else
+          std::cout << "[INFO] Last ";
+        std::cout << s << " items in the current array: ";
+        for (int i = start; i <= end; i++)
+            std::cout << list[i-1] << " ";
+        if (tooLarge)
+            std::cout << std::endl << "(Requested item count of " << sc
+                      << " is too large. Showing only "
+                      << std::to_string(s) << " items.)"  << std::endl;
+        std::cout << std::endl;
+    } else {
+        std::cout << "<empty>" << std::endl;
+    }
+}  // end print
+
+// begin removeAt
+template <class Type>
+void arrayListType<Type>::removeAt(int location) {
+    if (location < 0 || location >= length) {
+        std::cout << "The location of the item to be removed "
+             << "is out of range." << std::endl;
+    } else {
+        for (int i = location; i < length - 1; i++)
+            list[i] = list[i+1];
+
+        length--;
+    }
+}  // end removeAt
+
+// begin constructor
+template <class Type>
+arrayListType<Type>::arrayListType(int size) {
+    if (size <= 0) {
+        std::cout << "The array size must be positive. Creating "
+             << "an array of the size 100." << std::endl;
+
+        maxSize = LISTITEMS;
+    } else {
+        maxSize = size;
+    }
+
+    length = 0;
+
+    list = new int[maxSize];
+}  // end constructor
+
+// begin destructor
+template <class Type>
+arrayListType<Type>::~arrayListType() {
+    delete [] list;
+}  // end destructor
 
 #endif
